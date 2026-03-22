@@ -55,8 +55,12 @@ echo ""
 cd "$ANSIBLE_DIR"
 
 EXTRA_VARS=()
-[[ -n "$K3S_ARGS" ]]    && EXTRA_VARS+=(-e "k3s_install_args=${K3S_ARGS}")
-[[ -n "$EXTRA_PORTS" ]] && EXTRA_VARS+=(-e "firewall_extra_ports=[${EXTRA_PORTS}]")
+[[ -n "$K3S_ARGS" ]] && EXTRA_VARS+=(-e "k3s_install_args=${K3S_ARGS}")
+if [[ -n "$EXTRA_PORTS" ]]; then
+	IFS=',' read -ra PORTS_ARRAY <<< "$EXTRA_PORTS"
+	PORTS_JSON=$(printf '"%s",' "${PORTS_ARRAY[@]}")
+	EXTRA_VARS+=(-e "{\"firewall_extra_ports\": [${PORTS_JSON%,}]}")
+fi
 
 ansible-playbook \
 	-i "$TARGET," \
