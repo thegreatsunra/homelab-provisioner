@@ -14,7 +14,8 @@ service:
   port: 8123
 
 env:
-  TZ: America/Chicago
+  - name: TZ
+    value: America/Chicago
 
 configuration:
   enabled: true
