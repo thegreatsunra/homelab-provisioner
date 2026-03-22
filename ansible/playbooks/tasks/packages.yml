@@ -1,0 +1,30 @@
+---
+- name: Update apt cache and upgrade packages
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: full
+    cache_valid_time: 3600
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name:
+      - auditd
+      - avahi-daemon
+      - curl
+      - fail2ban
+      - git
+      - ufw
+      - unattended-upgrades
+      - wget
+      - zsh
+    state: present
+
+- name: Check if reboot is required
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: Reboot if kernel or libraries were updated
+  ansible.builtin.reboot:
+    reboot_timeout: 300
+  when: reboot_required.stat.exists

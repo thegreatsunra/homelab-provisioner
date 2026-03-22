@@ -1,0 +1,45 @@
+---
+- name: Check if k3s is already installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Install k3s  # noqa: command-instead-of-module risky-shell-pipe
+  ansible.builtin.shell:
+    cmd: curl -sfL https://get.k3s.io | sh -s - {{ k3s_install_args | default('') }}
+  when: not k3s_binary.stat.exists
+  changed_when: true
+
+- name: Wait for k3s node to be Ready
+  ansible.builtin.command:
+    cmd: k3s kubectl get nodes --no-headers
+  register: nodes_output
+  until: nodes_output.stdout is search(' Ready')
+  retries: 20
+  delay: 5
+  changed_when: false
+
+- name: Allow K3s API server (UFW)
+  ansible.builtin.command:
+    cmd: ufw allow 6443/tcp
+  changed_when: true
+
+- name: Allow K3s kubelet (UFW)
+  ansible.builtin.command:
+    cmd: ufw allow 10250/tcp
+  changed_when: true
+
+- name: Allow K3s pod CIDR (UFW)
+  ansible.builtin.command:
+    cmd: ufw allow from 10.42.0.0/16 to any comment 'k3s pods'
+  changed_when: true
+
+- name: Allow K3s service CIDR (UFW)
+  ansible.builtin.command:
+    cmd: ufw allow from 10.43.0.0/16 to any comment 'k3s services'
+  changed_when: true
+
+- name: Reload UFW
+  ansible.builtin.command:
+    cmd: ufw reload
+  changed_when: true

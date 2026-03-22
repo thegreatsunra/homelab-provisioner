@@ -1,0 +1,47 @@
+---
+- name: Harden SSH
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  loop:
+    - name: disable password auth
+      regexp: '^#?PasswordAuthentication'
+      line: 'PasswordAuthentication no'
+    - name: disable root login
+      regexp: '^#?PermitRootLogin'
+      line: 'PermitRootLogin no'
+    - name: disable empty passwords
+      regexp: '^#?PermitEmptyPasswords'
+      line: 'PermitEmptyPasswords no'
+    - name: disable X11 forwarding
+      regexp: '^#?X11Forwarding'
+      line: 'X11Forwarding no'
+    - name: disable TCP forwarding
+      regexp: '^#?AllowTcpForwarding'
+      line: 'AllowTcpForwarding no'
+    - name: disable compression
+      regexp: '^#?Compression'
+      line: 'Compression no'
+    - name: limit auth tries
+      regexp: '^#?MaxAuthTries'
+      line: 'MaxAuthTries 2'
+    - name: set client alive count
+      regexp: '^#?ClientAliveCountMax'
+      line: 'ClientAliveCountMax 2'
+    - name: limit max sessions
+      regexp: '^#?MaxSessions'
+      line: 'MaxSessions 2'
+    - name: set login grace time
+      regexp: '^#?LoginGraceTime'
+      line: 'LoginGraceTime 30'
+    - name: restrict allowed users
+      regexp: '^#?AllowUsers'
+      line: 'AllowUsers {{ ssh_user }}'
+    - name: require public key authentication
+      regexp: '^#?AuthenticationMethods'
+      line: 'AuthenticationMethods publickey'
+  loop_control:
+    label: "{{ item.name }}"
+  notify: Restart ssh

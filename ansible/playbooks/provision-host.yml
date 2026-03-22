@@ -1,0 +1,52 @@
+---
+- name: Provision host
+  hosts: all
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Capture SSH user before become escalation
+      ansible.builtin.command: whoami
+      become: false
+      register: whoami_result
+      changed_when: false
+
+    - name: Set ssh_user fact
+      ansible.builtin.set_fact:
+        ssh_user: "{{ whoami_result.stdout }}"
+
+  tasks:
+    - name: Packages
+      ansible.builtin.import_tasks: tasks/packages.yml
+
+    - name: SSH hardening
+      ansible.builtin.import_tasks: tasks/ssh.yml
+
+    - name: Firewall
+      ansible.builtin.import_tasks: tasks/firewall.yml
+
+    - name: Users
+      ansible.builtin.import_tasks: tasks/users.yml
+
+    - name: System
+      ansible.builtin.import_tasks: tasks/system.yml
+
+    - name: Kernel hardening
+      ansible.builtin.import_tasks: tasks/kernel.yml
+
+    - name: Install K3s
+      ansible.builtin.import_tasks: tasks/k3s.yml
+
+    - name: Install Helm
+      ansible.builtin.import_tasks: tasks/helm.yml
+
+  handlers:
+    - name: Restart ssh
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+
+    - name: Apply sysctl
+      ansible.builtin.command:
+        cmd: sysctl --system
+      changed_when: true

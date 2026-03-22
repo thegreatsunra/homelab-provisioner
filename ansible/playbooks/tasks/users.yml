@@ -1,0 +1,28 @@
+---
+- name: Configure passwordless sudo
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/{{ ssh_user }}
+    line: "{{ ssh_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
+    create: true
+    mode: '0440'
+    owner: root
+    group: root
+    validate: visudo -cf %s
+
+- name: Check if Oh My Zsh is installed
+  ansible.builtin.stat:
+    path: "/home/{{ ssh_user }}/.oh-my-zsh"
+  register: oh_my_zsh
+  become: false
+
+- name: Install Oh My Zsh
+  ansible.builtin.shell:
+    cmd: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  when: not oh_my_zsh.stat.exists
+  become: false
+  changed_when: true
+
+- name: Set zsh as default shell
+  ansible.builtin.user:
+    name: "{{ ssh_user }}"
+    shell: /usr/bin/zsh

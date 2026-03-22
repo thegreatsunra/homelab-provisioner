@@ -1,0 +1,69 @@
+image:
+  pullPolicy: Always
+  tag: "2026.3.1"
+
+hostNetwork: true
+hostPort:
+  enabled: true
+  port: 8123
+
+persistence:
+  enabled: true
+
+service:
+  port: 8123
+
+env:
+  TZ: America/Chicago
+
+configuration:
+  enabled: true
+  forceInit: true
+  templateConfig: |-
+    # Loads default set of integrations. Do not remove.
+    default_config:
+
+    {{- if .Values.ingress.enabled }}
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        {{- range .Values.configuration.trusted_proxies }}
+        - {{ . }}
+        {{- end }}
+    {{- end }}
+
+    rest_command:
+      trigger_pagerduty_incident:
+        url: https://events.pagerduty.com/v2/enqueue
+        method: post
+        content_type: application/json
+        payload: >
+          {
+            "payload": {
+              "summary": "The water is too damn high",
+              "source": "lyle/downstairs/sump/sensors/water/level",
+              "severity": "warning"
+            },
+            "routing_key": "{{ .Values.pagerdutyRoutingKey }}",
+            "event_action": "trigger",
+            "dedup_key": "sump/water/level"
+          }
+
+      resolve_pagerduty_incident:
+        url: https://events.pagerduty.com/v2/enqueue
+        method: post
+        content_type: application/json
+        payload: >
+          {
+            "payload": {
+              "summary": "The water level has recovered",
+              "source": "lyle/downstairs/sump/sensors/water/level",
+              "severity": "warning"
+            },
+            "routing_key": "{{ .Values.pagerdutyRoutingKey }}",
+            "event_action": "resolve",
+            "dedup_key": "sump/water/level"
+          }
+
+# Secret values (pagerdutyRoutingKey) are passed via values.secret.yml — see values.secret.yml.example.
+pagerdutyRoutingKey: ""

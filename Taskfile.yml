@@ -1,0 +1,24 @@
+version: "3"
+
+tasks:
+  test:
+    desc: Run all tests (Ansible)
+    cmds:
+      - task: test:ansible
+
+  test:ansible:
+    desc: Run ansible-lint on playbooks
+    cmds:
+      - ansible-lint ansible/playbooks/
+    silent: true
+
+  ci:
+    desc: Run tests and linting in Docker
+    cmds:
+      - docker build -t homelab-provisioner .
+      - docker run --rm homelab-provisioner
+
+  lint:
+    desc: Run pre-commit hooks on all files (auto-fixes where possible)
+    cmds:
+      - pre-commit run --all-files

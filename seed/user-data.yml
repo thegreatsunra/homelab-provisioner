@@ -1,0 +1,61 @@
+#cloud-config
+# Ubuntu Server autoinstall configuration.
+# Used by create-seed-usb.bash — placeholders (@@VAR@@) are substituted by the script.
+#
+# autoinstall: drives unattended Ubuntu installation.
+# user-data: applied by cloud-init on first boot after installation.
+
+autoinstall:
+  version: 1
+
+  locale: en_US.UTF-8
+
+  keyboard:
+    layout: us
+
+  network:
+    version: 2
+    ethernets:
+      any:
+        match:
+          name: "en*"
+        dhcp4: true
+
+  # LVM on the largest non-removable disk (subiquity skips USB drives, targeting the internal SSD)
+  storage:
+    layout:
+      name: lvm
+
+  ssh:
+    install-server: true
+    allow-pw: false
+    authorized-keys:
+      - "@@SSH_KEY@@"
+
+  packages:
+    - avahi-daemon
+    - curl
+    - git
+    - wget
+
+  user-data:
+    hostname: "@@HOSTNAME@@"
+    fqdn: "@@HOSTNAME@@.local"
+    manage_etc_hosts: true
+
+    users:
+      - name: "@@USERNAME@@"
+        groups: [adm, sudo]
+        shell: /bin/bash
+        lock_passwd: true
+        ssh_authorized_keys:
+          - "@@SSH_KEY@@"
+        sudo: ALL=(ALL) NOPASSWD:ALL
+
+    package_update: true
+    package_upgrade: true
+
+    final_message: |
+      Cloud-init complete. @@HOSTNAME@@ is ready.
+      SSH in: ssh @@USERNAME@@@@@HOSTNAME@@.local
+      Then run: ansible/run-playbook.bash --target @@HOSTNAME@@.local --user @@USERNAME@@ --playbook provision-host.yml
