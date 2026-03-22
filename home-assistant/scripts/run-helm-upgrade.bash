@@ -6,8 +6,8 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 NAMESPACE="home-assistant"
 RELEASE="home-assistant"
-VALUES_FILE="$SCRIPT_DIR/../helm/home-assistant/values.yml"
-SECRETS_FILE="$SCRIPT_DIR/../helm/home-assistant/values.secret.yml"
+VALUES_FILE="$SCRIPT_DIR/../helm/values.yml"
+SECRETS_FILE="$SCRIPT_DIR/../helm/values.secret.yml"
 
 usage() {
 	echo "Usage: $(basename "$0") [--namespace <namespace>] [--release <release>] [--values <file>] [--secrets <file>]"
@@ -26,7 +26,7 @@ done
 
 if [[ ! -f "$SECRETS_FILE" ]]; then
 	echo "Error: secrets file not found: $SECRETS_FILE" >&2
-	echo "Copy helm/home-assistant/values.secret.yml.example to values.secret.yml and fill in your values." >&2
+	echo "Copy home-assistant/helm/values.secret.yml.example to home-assistant/helm/values.secret.yml and fill in your values." >&2
 	exit 1
 fi
 

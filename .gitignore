@@ -248,4 +248,4 @@ pyrightconfig.json
 ### Project ###
 .claude/settings.local.json
 docs/resources/
-helm/home-assistant/values.secret.yml
+home-assistant/helm/values.secret.yml
