@@ -40,6 +40,9 @@
     - name: Install Helm
       ansible.builtin.import_tasks: tasks/helm.yml
 
+    - name: Install K9s
+      ansible.builtin.import_tasks: tasks/k9s.yml
+
   handlers:
     - name: Restart ssh
       ansible.builtin.service:

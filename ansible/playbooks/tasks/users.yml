@@ -35,6 +35,7 @@
       alias k='sudo k3s kubectl'
       alias kga='sudo k3s kubectl get --all-namespaces'
       alias updateallthethings='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+      alias k9s='sudo k9s --kubeconfig /etc/rancher/k3s/k3s.yaml'
   become: false
 
 - name: Remove zsh auto-update script
