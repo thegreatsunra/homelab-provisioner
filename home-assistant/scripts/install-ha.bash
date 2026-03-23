@@ -2,31 +2,49 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# Deploy Home Assistant to a remote host.
+#
+# Usage: install-ha.bash --config <host-config.yml> [--secrets <file>]
+#
+# Reads host and user from the config file. Clones/updates the repo on the
+# remote host, copies secrets, and runs the Helm upgrade.
+
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
 
-TARGET=""
-SSH_USER="ubuntu"
+CONFIG=""
 SECRETS_FILE="$REPO_ROOT/home-assistant/helm/values.secret.yml"
 
 usage() {
-	echo "Usage: $(basename "$0") --target <ip-or-hostname> [--user <username>] [--secrets <file>]"
+	echo "Usage: $(basename "$0") --config <host-config.yml> [--secrets <file>]"
 	exit 1
 }
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
-		--target)  TARGET="$2";       shift 2 ;;
-		--user)    SSH_USER="$2";     shift 2 ;;
+		--config)  CONFIG="$2";       shift 2 ;;
 		--secrets) SECRETS_FILE="$2"; shift 2 ;;
 		*) usage ;;
 	esac
 done
 
-if [[ -z "$TARGET" ]]; then
-	echo "Error: --target is required" >&2
+if [[ -z "$CONFIG" ]]; then
+	echo "Error: --config is required" >&2
 	usage
 fi
+
+if [[ ! -f "$CONFIG" ]]; then
+	echo "Error: config file not found: $CONFIG" >&2
+	exit 1
+fi
+
+if ! command -v yq &>/dev/null; then
+	echo "Error: yq is required (brew install yq)" >&2
+	exit 1
+fi
+
+TARGET=$(yq '.host' "$CONFIG")
+SSH_USER=$(yq '.user // "ubuntu"' "$CONFIG")
 
 if [[ ! -f "$SECRETS_FILE" ]]; then
 	echo "Error: secrets file not found: $SECRETS_FILE" >&2

@@ -1,0 +1,7 @@
+host: tamematrix.local
+user: gordo
+playbook: provision-host.yml
+vars:
+  k3s_install_args: "--disable=traefik --disable=servicelb"
+  firewall_extra_ports:
+    - 8123/tcp

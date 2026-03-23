@@ -30,23 +30,25 @@ seed/create-seed-usb.bash --disk /dev/<disk> --hostname <hostname> --username <u
 First-time setup:
 
 ```bash
-brew install ansible
+brew install ansible yq
+```
+
+Create a host config file (e.g. `home-assistant/host.yml`):
+
+```yaml
+host: <ip-or-hostname>
+user: <username>
+playbook: provision-host.yml
+vars:
+  k3s_install_args: "--disable=traefik --disable=servicelb"
+  firewall_extra_ports:
+    - 8123/tcp
 ```
 
 Then:
 
 ```bash
-ansible/run-playbook.bash --target <ip-or-hostname> --playbook provision-host.yml [--user <username>] [--k3s-args <args>]
-```
-
-This command connects to the host via SSH key.
-
-Example for provisioning Home Assistant, which requires host networking:
-
-```bash
-ansible/run-playbook.bash --target <hostname>.local --user <username> --playbook provision-host.yml \
-  --k3s-args "--disable=traefik --disable=servicelb" \
-  --extra-ports "8123/tcp"
+ansible/run-playbook.bash --config home-assistant/host.yml
 ```
 
 ## Testing and Linting
