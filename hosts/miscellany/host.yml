@@ -1,3 +1,6 @@
 host: deputyshark.local
 user: woody
 playbook: provision-host.yml
+vars:
+  firewall_extra_ports:
+    - 1883/tcp
