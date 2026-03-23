@@ -30,10 +30,10 @@
 - Fix the root cause. Don't document workarounds.
 - Proactively audit your own work. If you'd be embarrassed by it, fix it first.
 - Testing and linting are distinct concerns — don't conflate them.
-  - Tests verify correctness.
+  - Tests verify functionality.
   - Linters enforce style and standards.
 - Idempotency matters. Every operation should be safe to run twice.
-- Terminal history is not a config store. Host-specific values belong in config files, not flags passed by memory.
+- Terminal history is not a config store.
 
 ## Tooling (this project)
 
