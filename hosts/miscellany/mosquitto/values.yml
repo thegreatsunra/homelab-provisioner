@@ -4,3 +4,10 @@ image:
   pullPolicy: IfNotPresent
 service:
   type: LoadBalancer
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 400m
+    memory: 256Mi

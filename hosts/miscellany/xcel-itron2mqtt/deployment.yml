@@ -41,6 +41,13 @@ spec:
                   key: meter_ip
             - name: METER_PORT
               value: "8081"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 400m
+              memory: 256Mi
           volumeMounts:
             - name: certs
               mountPath: /opt/xcel_itron2mqtt/certs
