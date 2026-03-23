@@ -1,0 +1,11 @@
+alias aliases='pico ~/.oh-my-zsh/custom/aliases.zsh'
+alias d='sudo docker'
+alias h='sudo -E helm'
+alias k='sudo k3s kubectl'
+alias kga='sudo k3s kubectl get --all-namespaces'
+alias k9s='sudo k9s --kubeconfig /etc/rancher/k3s/k3s.yaml'
+alias updateallthethings='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
+
+updatek3s() {
+  curl -sfL https://get.k3s.io | sudo sh -s - {{ k3s_install_args | default('') }}
+}

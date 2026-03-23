@@ -23,19 +23,12 @@
   changed_when: true
 
 - name: Install zsh aliases
-  ansible.builtin.copy:
+  ansible.builtin.template:
+    src: aliases.zsh.j2
     dest: "/home/{{ ssh_user }}/.oh-my-zsh/custom/aliases.zsh"
     owner: "{{ ssh_user }}"
     group: "{{ ssh_user }}"
     mode: '0644'
-    content: |
-      alias aliases='pico ~/.oh-my-zsh/custom/aliases.zsh'
-      alias d='sudo docker'
-      alias h='sudo -E helm'
-      alias k='sudo k3s kubectl'
-      alias kga='sudo k3s kubectl get --all-namespaces'
-      alias updateallthethings='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
-      alias k9s='sudo k9s --kubeconfig /etc/rancher/k3s/k3s.yaml'
   become: false
 
 - name: Remove zsh auto-update script
