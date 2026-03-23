@@ -1,5 +1,5 @@
-host: tamematrix.local
-user: gordo
+host: uptownrodeo.local
+user: bree
 playbook: provision-host.yml
 vars:
   k3s_install_args: "--disable=traefik --disable=servicelb"
