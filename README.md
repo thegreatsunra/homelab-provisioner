@@ -2,7 +2,7 @@
 
 Automated provisioning for homelab Ubuntu hosts.
 
-Includes additional tooling for migrating Home Assistant between hosts.
+Includes tooling for deploying and updating Home Assistant via Helm on k3s.
 
 ## Quick Start
 
@@ -50,6 +50,37 @@ Then:
 ```bash
 ansible/run-playbook.bash --config home-assistant/host.yml
 ```
+
+## Home Assistant
+
+### First-time install
+
+`install-ha.bash` runs from macOS. It clones or updates the repo on the remote host, copies your secrets file, and runs the Helm deployment.
+
+Before running, copy the secrets example and fill in your values:
+
+```bash
+cp home-assistant/helm/values.secret.yml.example home-assistant/helm/values.secret.yml
+# edit values.secret.yml
+```
+
+Then deploy:
+
+```bash
+home-assistant/scripts/install-ha.bash --config home-assistant/host.yml
+```
+
+### Updating config or upgrading the Helm chart
+
+After the initial install, `run-helm-upgrade.bash` runs directly on the host. SSH in and run it from the repo:
+
+```bash
+ssh <user>@<host>
+cd ~/homelab-provisioner
+home-assistant/scripts/run-helm-upgrade.bash
+```
+
+This re-applies `home-assistant/helm/values.yml` and `home-assistant/helm/values.secret.yml` against the running release. Use it whenever you change Helm values or want to upgrade to a newer chart version.
 
 ## Testing and Linting
 
