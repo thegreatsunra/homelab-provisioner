@@ -75,7 +75,8 @@
     mode: '0755'
     content: |
       #!/bin/sh
-      /usr/lib/update-notifier/apt-check --human-readable 2>&1 | grep -v -E "ESM|ubuntu\.com|pro status|Expanded Security Maintenance"
+      /usr/lib/update-notifier/apt-check --human-readable 2>&1 \
+        | grep -v -E "ESM|ubuntu\.com|pro status|Expanded Security Maintenance"
 
 - name: Disable ESM motd (best effort)
   ansible.builtin.file:
