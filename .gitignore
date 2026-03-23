@@ -246,6 +246,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/ansible,linux,macos,python,visualstudiocode
 
 ### Project ###
-.claude/settings.local.json
+.claude/
 docs/resources/
 values.secret.yml
