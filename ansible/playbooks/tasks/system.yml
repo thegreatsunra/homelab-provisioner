@@ -55,3 +55,9 @@
     path: /etc/update-motd.d/10-help-text
     mode: '0644'
   failed_when: false
+
+- name: Disable ESM motd (best effort)
+  ansible.builtin.file:
+    path: /etc/update-motd.d/91-contract-ua-esm-status
+    mode: '0644'
+  failed_when: false
