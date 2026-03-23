@@ -33,6 +33,7 @@
   - Tests verify correctness.
   - Linters enforce style and standards.
 - Idempotency matters. Every operation should be safe to run twice.
+- Terminal history is not a config store. Host-specific values belong in config files, not flags passed by memory.
 
 ## Tooling (this project)
 
