@@ -58,15 +58,15 @@ echo "Syncing repo on $TARGET..."
 ssh "${SSH_USER}@${TARGET}" bash -s -- "$REPO_URL" << 'ENDSSH'
 	set -euo pipefail
 	REPO_URL="$1"
-	if [[ -d ~/homelab-provisioner ]]; then
-		git -C ~/homelab-provisioner pull
+	if [[ -d ~/stuff/homelab-provisioner ]]; then
+		git -C ~/stuff/homelab-provisioner pull
 	else
-		git clone "$REPO_URL" ~/homelab-provisioner
+		git clone "$REPO_URL" ~/stuff/homelab-provisioner
 	fi
 ENDSSH
 
 echo "Copying secrets..."
-scp "$SECRETS_FILE" "${SSH_USER}@${TARGET}:~/homelab-provisioner/hosts/home-assistant/helm/values.secret.yml"
+scp "$SECRETS_FILE" "${SSH_USER}@${TARGET}:~/stuff/homelab-provisioner/hosts/home-assistant/helm/values.secret.yml"
 
 echo "Deploying..."
-ssh "${SSH_USER}@${TARGET}" '$HOME/homelab-provisioner/hosts/home-assistant/scripts/run-helm-upgrade.bash'
+ssh "${SSH_USER}@${TARGET}" '$HOME/stuff/homelab-provisioner/hosts/home-assistant/scripts/run-helm-upgrade.bash'

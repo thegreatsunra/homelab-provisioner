@@ -76,7 +76,7 @@ After the initial install, `run-helm-upgrade.bash` runs directly on the host. SS
 
 ```bash
 ssh <user>@<host>
-cd ~/homelab-provisioner
+cd ~/stuff/homelab-provisioner
 hosts/home-assistant/scripts/run-helm-upgrade.bash
 ```
 
