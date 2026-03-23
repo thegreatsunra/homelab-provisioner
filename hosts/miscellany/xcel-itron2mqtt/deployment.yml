@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xcel-itron2mqtt
+  namespace: xcel-itron2mqtt
+  labels:
+    app: xcel-itron2mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xcel-itron2mqtt
+  template:
+    metadata:
+      labels:
+        app: xcel-itron2mqtt
+    spec:
+      containers:
+        - name: itron
+          image: ghcr.io/zaknye/xcel_itron2mqtt:main
+          env:
+            - name: MQTT_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: xcel-itron2mqtt-config
+                  key: mqtt_server
+            - name: MQTT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: xcel-itron2mqtt-config
+                  key: mqtt_user
+            - name: MQTT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: xcel-itron2mqtt-config
+                  key: mqtt_password
+            - name: METER_IP
+              valueFrom:
+                secretKeyRef:
+                  name: xcel-itron2mqtt-config
+                  key: meter_ip
+            - name: METER_PORT
+              value: "8081"
+          volumeMounts:
+            - name: certs
+              mountPath: /opt/xcel_itron2mqtt/certs
+              readOnly: true
+      volumes:
+        - name: certs
+          secret:
+            secretName: xcel-itron2mqtt-certs
