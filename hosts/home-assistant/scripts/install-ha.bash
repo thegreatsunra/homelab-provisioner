@@ -10,10 +10,10 @@ IFS=$'\n\t'
 # remote host, copies secrets, and runs the Helm upgrade.
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-REPO_ROOT=$(cd "$SCRIPT_DIR/../.." && pwd)
+REPO_ROOT=$(cd "$SCRIPT_DIR/../../.." && pwd)
 
 CONFIG=""
-SECRETS_FILE="$REPO_ROOT/home-assistant/helm/values.secret.yml"
+SECRETS_FILE="$REPO_ROOT/hosts/home-assistant/helm/values.secret.yml"
 
 usage() {
 	echo "Usage: $(basename "$0") --config <host-config.yml> [--secrets <file>]"
@@ -48,7 +48,7 @@ SSH_USER=$(yq '.user // "ubuntu"' "$CONFIG")
 
 if [[ ! -f "$SECRETS_FILE" ]]; then
 	echo "Error: secrets file not found: $SECRETS_FILE" >&2
-	echo "Copy home-assistant/helm/values.secret.yml.example to values.secret.yml and fill in your values." >&2
+	echo "Copy hosts/home-assistant/helm/values.secret.yml.example to values.secret.yml and fill in your values." >&2
 	exit 1
 fi
 
@@ -66,7 +66,7 @@ ssh "${SSH_USER}@${TARGET}" bash -s -- "$REPO_URL" << 'ENDSSH'
 ENDSSH
 
 echo "Copying secrets..."
-scp "$SECRETS_FILE" "${SSH_USER}@${TARGET}:~/homelab-provisioner/home-assistant/helm/values.secret.yml"
+scp "$SECRETS_FILE" "${SSH_USER}@${TARGET}:~/homelab-provisioner/hosts/home-assistant/helm/values.secret.yml"
 
 echo "Deploying..."
-ssh "${SSH_USER}@${TARGET}" '$HOME/homelab-provisioner/home-assistant/scripts/run-helm-upgrade.bash'
+ssh "${SSH_USER}@${TARGET}" '$HOME/homelab-provisioner/hosts/home-assistant/scripts/run-helm-upgrade.bash'

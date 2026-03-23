@@ -1,0 +1,3 @@
+host: deputyshark.local
+user: woody
+playbook: provision-host.yml

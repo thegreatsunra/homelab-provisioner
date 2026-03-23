@@ -33,7 +33,7 @@ First-time setup:
 brew install ansible yq
 ```
 
-Create a host config file (e.g. `home-assistant/host.yml`):
+Create a host config file (e.g. `hosts/<name>/host.yml`):
 
 ```yaml
 host: <ip-or-hostname>
@@ -48,7 +48,7 @@ vars:
 Then:
 
 ```bash
-ansible/run-playbook.bash --config home-assistant/host.yml
+ansible/run-playbook.bash --config hosts/<name>/host.yml
 ```
 
 ## Home Assistant
@@ -60,14 +60,14 @@ ansible/run-playbook.bash --config home-assistant/host.yml
 Before running, copy the secrets example and fill in your values:
 
 ```bash
-cp home-assistant/helm/values.secret.yml.example home-assistant/helm/values.secret.yml
+cp hosts/home-assistant/helm/values.secret.yml.example hosts/home-assistant/helm/values.secret.yml
 # edit values.secret.yml
 ```
 
 Then deploy:
 
 ```bash
-home-assistant/scripts/install-ha.bash --config home-assistant/host.yml
+hosts/home-assistant/scripts/install-ha.bash --config hosts/home-assistant/host.yml
 ```
 
 ### Updating config or upgrading the Helm chart
@@ -77,10 +77,10 @@ After the initial install, `run-helm-upgrade.bash` runs directly on the host. SS
 ```bash
 ssh <user>@<host>
 cd ~/homelab-provisioner
-home-assistant/scripts/run-helm-upgrade.bash
+hosts/home-assistant/scripts/run-helm-upgrade.bash
 ```
 
-This re-applies `home-assistant/helm/values.yml` and `home-assistant/helm/values.secret.yml` against the running release. Use it whenever you change Helm values or want to upgrade to a newer chart version.
+This re-applies `hosts/home-assistant/helm/values.yml` and `hosts/home-assistant/helm/values.secret.yml` against the running release. Use it whenever you change Helm values or want to upgrade to a newer chart version.
 
 ## Testing and Linting
 

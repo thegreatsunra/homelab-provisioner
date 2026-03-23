@@ -25,6 +25,6 @@ RUN git init && pre-commit install-hooks
 COPY . .
 
 # Stage all files so pre-commit can discover them, and ensure scripts are executable
-RUN chmod +x seed/*.bash home-assistant/scripts/*.bash ansible/run-playbook.bash && git add -A
+RUN chmod +x seed/*.bash hosts/home-assistant/scripts/*.bash ansible/run-playbook.bash && git add -A
 
 CMD ["sh", "-c", "task test && task lint"]

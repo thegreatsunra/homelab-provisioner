@@ -26,7 +26,7 @@ done
 
 if [[ ! -f "$SECRETS_FILE" ]]; then
 	echo "Error: secrets file not found: $SECRETS_FILE" >&2
-	echo "Copy home-assistant/helm/values.secret.yml.example to home-assistant/helm/values.secret.yml and fill in your values." >&2
+	echo "Copy hosts/home-assistant/helm/values.secret.yml.example to hosts/home-assistant/helm/values.secret.yml and fill in your values." >&2
 	exit 1
 fi
 
