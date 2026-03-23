@@ -4,7 +4,7 @@
     cmd: lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
   register: lvextend_result
   changed_when: "'successfully resized' in lvextend_result.stdout"
-  failed_when: lvextend_result.rc != 0 and 'matches the existing size' not in lvextend_result.stderr
+  failed_when: lvextend_result.rc != 0 and 'matches existing size' not in lvextend_result.stderr
 
 - name: Resize filesystem to fill logical volume
   ansible.builtin.command:

@@ -34,7 +34,85 @@
       alias h='sudo -E helm'
       alias k='sudo k3s kubectl'
       alias kga='sudo k3s kubectl get --all-namespaces'
+      alias updateallthethings='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y'
   become: false
+
+- name: Remove zsh auto-update script
+  ansible.builtin.file:
+    path: "/home/{{ ssh_user }}/.oh-my-zsh/custom/auto-update.zsh"
+    state: absent
+  become: false
+
+- name: Set Oh My Zsh update mode to auto
+  ansible.builtin.lineinfile:
+    path: "/home/{{ ssh_user }}/.zshrc"
+    regexp: "zstyle ':omz:update' mode"
+    line: "zstyle ':omz:update' mode auto"
+  become: false
+
+- name: Set Oh My Zsh update frequency to daily
+  ansible.builtin.lineinfile:
+    path: "/home/{{ ssh_user }}/.zshrc"
+    regexp: "zstyle ':omz:update' frequency"
+    line: "zstyle ':omz:update' frequency 1"
+  become: false
+
+- name: Check if Atuin is installed
+  ansible.builtin.stat:
+    path: "/home/{{ ssh_user }}/.atuin/bin/atuin"
+  register: atuin_bin
+  become: false
+
+# setup.atuin.sh reads interactive prompts from /dev/tty, bypassing stdin.
+# Pass --non-interactive to skip the wizard; the installer handles shell
+# integration automatically.
+- name: Install Atuin binary
+  ansible.builtin.get_url:
+    url: https://setup.atuin.sh
+    dest: /tmp/install-atuin.sh
+    mode: '0755'
+  when: not atuin_bin.stat.exists
+  become: false
+
+- name: Run Atuin binary installer
+  ansible.builtin.command:
+    cmd: /tmp/install-atuin.sh --non-interactive
+  when: not atuin_bin.stat.exists
+  become: false
+  changed_when: true
+
+- name: Create Atuin config directory
+  ansible.builtin.file:
+    path: "/home/{{ ssh_user }}/.config/atuin"
+    state: directory
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    mode: '0755'
+  become: false
+
+- name: Configure Atuin (local history, no sync)
+  ansible.builtin.copy:
+    dest: "/home/{{ ssh_user }}/.config/atuin/config.toml"
+    owner: "{{ ssh_user }}"
+    group: "{{ ssh_user }}"
+    mode: '0644'
+    content: |
+      auto_sync = false
+      sync_frequency = "0"
+  become: false
+
+- name: Check if Atuin history database exists
+  ansible.builtin.stat:
+    path: "/home/{{ ssh_user }}/.local/share/atuin/history.db"
+  register: atuin_db
+  become: false
+
+- name: Import shell history into Atuin
+  ansible.builtin.command:
+    cmd: "/home/{{ ssh_user }}/.atuin/bin/atuin import auto"
+  when: not atuin_db.stat.exists
+  become: false
+  changed_when: true
 
 - name: Set zsh as default shell
   ansible.builtin.user:
