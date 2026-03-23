@@ -1,4 +1,17 @@
 ---
+- name: Extend LVM logical volume to use full volume group
+  ansible.builtin.command:
+    cmd: lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+  register: lvextend_result
+  changed_when: "'successfully resized' in lvextend_result.stdout"
+  failed_when: lvextend_result.rc != 0 and 'matches the existing size' not in lvextend_result.stderr
+
+- name: Resize filesystem to fill logical volume
+  ansible.builtin.command:
+    cmd: resize2fs /dev/ubuntu-vg/ubuntu-lv
+  register: resize2fs_result
+  changed_when: "'Nothing to do' not in resize2fs_result.stdout"
+
 - name: Get current timezone
   ansible.builtin.command:
     cmd: timedatectl show --property=Timezone --value
