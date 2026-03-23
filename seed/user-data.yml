@@ -58,4 +58,4 @@ autoinstall:
     final_message: |
       Cloud-init complete. @@HOSTNAME@@ is ready.
       SSH in: ssh @@USERNAME@@@@@HOSTNAME@@.local
-      Then run: ansible/run-playbook.bash --target @@HOSTNAME@@.local --user @@USERNAME@@ --playbook provision-host.yml
+      Then run: ansible/run-playbook.bash --config <path-to-host-config.yml>
