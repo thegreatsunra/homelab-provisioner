@@ -31,12 +31,6 @@
     mode: '0644'
   become: false
 
-- name: Remove zsh auto-update script
-  ansible.builtin.file:
-    path: "/home/{{ ssh_user }}/.oh-my-zsh/custom/auto-update.zsh"
-    state: absent
-  become: false
-
 - name: Set Oh My Zsh update mode to auto
   ansible.builtin.lineinfile:
     path: "/home/{{ ssh_user }}/.zshrc"
