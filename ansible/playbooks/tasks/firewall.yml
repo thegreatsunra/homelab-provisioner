@@ -2,35 +2,39 @@
 - name: Configure UFW - deny incoming by default
   ansible.builtin.command:
     cmd: ufw default deny incoming
-  changed_when: true
+  changed_when: false
 
 - name: Configure UFW - allow outgoing by default
   ansible.builtin.command:
     cmd: ufw default allow outgoing
-  changed_when: true
+  changed_when: false
 
 - name: Configure UFW - allow SSH
   ansible.builtin.command:
     cmd: ufw allow 22/tcp
-  changed_when: true
+  register: ufw_ssh
+  changed_when: "'Rule added' in ufw_ssh.stdout"
 
 - name: Configure UFW - allow HTTP
   ansible.builtin.command:
     cmd: ufw allow 80/tcp
-  changed_when: true
+  register: ufw_http
+  changed_when: "'Rule added' in ufw_http.stdout"
 
 - name: Configure UFW - allow HTTPS
   ansible.builtin.command:
     cmd: ufw allow 443/tcp
-  changed_when: true
+  register: ufw_https
+  changed_when: "'Rule added' in ufw_https.stdout"
 
 - name: Configure UFW - allow extra ports
   ansible.builtin.command:
     cmd: ufw allow {{ item }}
   loop: "{{ firewall_extra_ports | default([]) }}"
-  changed_when: true
+  register: ufw_extra
+  changed_when: "'Rule added' in ufw_extra.stdout"
 
 - name: Enable UFW
   ansible.builtin.command:
     cmd: ufw --force enable
-  changed_when: true
+  changed_when: false
