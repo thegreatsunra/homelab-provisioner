@@ -17,7 +17,7 @@
 ## Code Style
 
 - Tabs for indentation unless the language doesn't support them (e.g. YAML).
-- Bash: `.bash` extension, `#!/usr/bin/env bash` shebang, `set -euo pipefail`.
+- Bash: `.sh` extension, `#!/usr/bin/env bash` shebang, `set -euo pipefail`.
 - YAML: 2-space indentation.
 - Minimize comments. Code should speak for itself. Comments describe what code used to do, not what it does now.
 - Name things accurately. A task named `test` should test, not lint.

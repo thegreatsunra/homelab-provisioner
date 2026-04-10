@@ -22,24 +22,28 @@
 - name: Allow K3s API server (UFW)
   ansible.builtin.command:
     cmd: ufw allow 6443/tcp
-  changed_when: true
+  register: ufw_k3s_api
+  changed_when: "'Rule added' in ufw_k3s_api.stdout"
 
 - name: Allow K3s kubelet (UFW)
   ansible.builtin.command:
     cmd: ufw allow 10250/tcp
-  changed_when: true
+  register: ufw_k3s_kubelet
+  changed_when: "'Rule added' in ufw_k3s_kubelet.stdout"
 
 - name: Allow K3s pod CIDR (UFW)
   ansible.builtin.command:
     cmd: ufw allow from 10.42.0.0/16 to any comment 'k3s pods'
-  changed_when: true
+  register: ufw_k3s_pods
+  changed_when: "'Rule added' in ufw_k3s_pods.stdout"
 
 - name: Allow K3s service CIDR (UFW)
   ansible.builtin.command:
     cmd: ufw allow from 10.43.0.0/16 to any comment 'k3s services'
-  changed_when: true
+  register: ufw_k3s_services
+  changed_when: "'Rule added' in ufw_k3s_services.stdout"
 
 - name: Reload UFW
   ansible.builtin.command:
     cmd: ufw reload
-  changed_when: true
+  changed_when: false

@@ -14,7 +14,7 @@ Download the [Ubuntu Server LTS ISO](https://ubuntu.com/download/server) and fla
 
 ```bash
 diskutil list
-seed/create-seed-usb.bash --disk /dev/<disk> --hostname <hostname> --username <username>
+seed/create-seed-usb.sh --disk /dev/<disk> --hostname <hostname> --username <username>
 ```
 
 **Step 3 — Boot the host:**
@@ -48,7 +48,7 @@ vars:
 Then:
 
 ```bash
-ansible/run-playbook.bash --config hosts/<name>/host.yml
+ansible/run-playbook.sh --config hosts/<name>/host.yml
 ```
 
 ## Testing and Linting
