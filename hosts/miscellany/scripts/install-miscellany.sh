@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 # Deploy Mosquitto and xcel-itron2mqtt to a remote host.
 #
-# Usage: install-miscellany.bash --config <host-config.yml> [--mosquitto-secrets <file>] [--xcel-secrets <file>] [--certs <dir>]
+# Usage: install-miscellany.sh --config <host-config.yml> [--mosquitto-secrets <file>] [--xcel-secrets <file>] [--certs <dir>]
 #
 # Reads host and user from the config file. Clones/updates the repo on the
 # remote host, copies secrets and certs, and runs the upgrade script.
@@ -94,4 +94,4 @@ scp "$CERTS_DIR/.cert.pem" "$CERTS_DIR/.key.pem" \
 
 echo "Deploying..."
 ssh "${SSH_USER}@${TARGET}" \
-	'$HOME/stuff/homelab-provisioner/hosts/miscellany/scripts/run-miscellany-upgrade.bash'
+	'$HOME/stuff/homelab-provisioner/hosts/miscellany/scripts/run-miscellany-upgrade.sh'

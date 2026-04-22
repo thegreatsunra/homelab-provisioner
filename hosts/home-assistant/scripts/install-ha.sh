@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 # Deploy Home Assistant to a remote host.
 #
-# Usage: install-ha.bash --config <host-config.yml> [--secrets <file>]
+# Usage: install-ha.sh --config <host-config.yml> [--secrets <file>]
 #
 # Reads host and user from the config file. Clones/updates the repo on the
 # remote host, copies secrets, and runs the Helm upgrade.
@@ -69,4 +69,4 @@ echo "Copying secrets..."
 scp "$SECRETS_FILE" "${SSH_USER}@${TARGET}:~/stuff/homelab-provisioner/hosts/home-assistant/helm/values.secret.yml"
 
 echo "Deploying..."
-ssh "${SSH_USER}@${TARGET}" '$HOME/stuff/homelab-provisioner/hosts/home-assistant/scripts/run-helm-upgrade.bash'
+ssh "${SSH_USER}@${TARGET}" '$HOME/stuff/homelab-provisioner/hosts/home-assistant/scripts/run-helm-upgrade.sh'

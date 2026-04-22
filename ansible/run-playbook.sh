@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 # Run an Ansible playbook against a target host.
 #
-# Usage: run-playbook.bash --config <host-config.yml>
+# Usage: run-playbook.sh --config <host-config.yml>
 #
 # Config file format (YAML):
 #   host:     <ip-or-hostname>   Required.
