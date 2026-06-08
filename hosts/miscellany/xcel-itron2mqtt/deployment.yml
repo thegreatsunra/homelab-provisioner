@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: itron
-          image: ghcr.io/zaknye/xcel_itron2mqtt:main
+          image: ghcr.io/zaknye/xcel_itron2mqtt:1.2.0
           env:
             - name: MQTT_SERVER
               valueFrom:
