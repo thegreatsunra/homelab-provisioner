@@ -75,7 +75,7 @@ sed -e "s|@@HOSTNAME@@|$HOSTNAME|g" \
 		"$TEMPLATE" > "$WORK_DIR/user-data"
 
 cat > "$WORK_DIR/meta-data" << EOF
-instance-id: ubuntu-24-04-$HOSTNAME
+instance-id: ubuntu-26-04-$HOSTNAME
 local-hostname: $HOSTNAME
 EOF
 
