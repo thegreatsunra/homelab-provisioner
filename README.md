@@ -51,6 +51,49 @@ Then:
 ansible/run-playbook.sh --config hosts/<name>/host.yml
 ```
 
+## Upgrading
+
+For a host that's already been through Quick Start. What to run depends on what changed.
+
+**Host config changed** (packages, firewall rules, k3s install args, hardening) — re-run the same Ansible command from Quick Start Step 4:
+
+```bash
+ansible/run-playbook.sh --config hosts/<name>/host.yml
+```
+
+The playbook is idempotent, so this is safe to run any time — it only applies what's changed.
+
+**App config changed** (Home Assistant, Mosquitto, or xcel-itron2mqtt — Helm values, image tags, deployment specs) — edit the relevant file (e.g. `hosts/home-assistant/helm/values.yml`), commit, and **push to `origin` first**. The deploy scripts have the host `git pull` from `origin`, not from your local checkout, so unpushed changes won't be picked up. Then, from your Mac:
+
+```bash
+hosts/home-assistant/scripts/install-ha.sh --config hosts/home-assistant/host.yml
+hosts/miscellany/scripts/install-miscellany.sh --config hosts/miscellany/host.yml
+```
+
+These sync the repo on the host, copy over secrets/certs, and run the Helm upgrade. They require the following (gitignored, copy each from its adjacent `.example` file and fill in):
+
+- `hosts/home-assistant/helm/values.secret.yml`
+- `hosts/miscellany/mosquitto/values.secret.yml`
+- `hosts/miscellany/xcel-itron2mqtt/config.secret.yml`
+- `hosts/miscellany/xcel-itron2mqtt/certs/.cert.pem` and `.key.pem`
+
+If those secrets/certs are missing locally but the host was already deployed once, they're most likely still sitting on the host — secrets are gitignored, so `git pull` never touches or removes them. Skip the copy step and upgrade directly on the host instead:
+
+```bash
+ssh <user>@<host>
+cd ~/stuff/homelab-provisioner && git pull
+hosts/home-assistant/scripts/run-helm-upgrade.sh        # Home Assistant host
+hosts/miscellany/scripts/run-miscellany-upgrade.sh       # Miscellany host
+```
+
+**Dependency versions changed** (Dockerfile base image, `.pre-commit-config.yaml` hook revs, `ansible/requirements.txt` floors, Helm image tags in `values.yml` / `deployment.yml`) — these aren't automated; check each against upstream and bump by hand, then verify before pushing:
+
+```bash
+task ci
+```
+
+Then push and deploy as described above.
+
 ## Testing and Linting
 
 ```bash
