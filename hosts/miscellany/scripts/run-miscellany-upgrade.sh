@@ -43,6 +43,7 @@ sudo k3s kubectl create namespace mosquitto --dry-run=client -o yaml \
 	| sudo k3s kubectl apply -f -
 
 helm upgrade --install mosquitto t3n/mosquitto \
+	--version 2.4.1 \
 	--namespace mosquitto \
 	-f "$MOSQUITTO_VALUES" \
 	-f "$MOSQUITTO_SECRETS" \

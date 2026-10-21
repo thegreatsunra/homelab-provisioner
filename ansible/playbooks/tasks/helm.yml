@@ -6,6 +6,6 @@
 
 - name: Install Helm  # noqa: command-instead-of-module risky-shell-pipe
   ansible.builtin.shell:
-    cmd: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    cmd: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash
   when: not helm_binary.stat.exists
   changed_when: true
