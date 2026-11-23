@@ -10,7 +10,7 @@
   ansible.builtin.command:
     cmd: resize2fs /dev/ubuntu-vg/ubuntu-lv
   register: resize2fs_result
-  changed_when: "'Nothing to do' not in resize2fs_result.stdout"
+  changed_when: "'Nothing to do' not in resize2fs_result.stderr"
 
 - name: Get current timezone
   ansible.builtin.command:
