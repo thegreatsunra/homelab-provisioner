@@ -1,6 +1,6 @@
 image:
   pullPolicy: Always
-  tag: "2026.10.2"
+  tag: "2026.11.2"
 
 hostNetwork: true
 hostPort:

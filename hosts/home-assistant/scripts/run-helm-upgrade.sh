@@ -41,7 +41,7 @@ helm repo update
 sudo k3s kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | sudo k3s kubectl apply -f -
 
 helm upgrade --install "$RELEASE" pajikos/home-assistant \
-	--version 0.3.87 \
+	--version 0.3.92 \
 	--namespace "$NAMESPACE" \
 	-f "$VALUES_FILE" \
 	-f "$SECRETS_FILE" \
