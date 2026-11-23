@@ -64,7 +64,7 @@
 
 - name: Disable systemd-motd timer (best effort)
   ansible.builtin.systemd:
-    name: motd-news
+    name: motd-news.timer
     state: stopped
     enabled: false
   failed_when: false
