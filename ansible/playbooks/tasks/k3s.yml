@@ -48,3 +48,24 @@
   ansible.builtin.command:
     cmd: ufw reload
   changed_when: false
+
+# Ubuntu's host mosquitto profile attaches to /usr/sbin/mosquitto inside containers too
+- name: Check for host mosquitto AppArmor profile
+  ansible.builtin.stat:
+    path: /etc/apparmor.d/mosquitto
+  register: apparmor_mosquitto
+
+- name: Create AppArmor disable directory
+  ansible.builtin.file:
+    path: /etc/apparmor.d/disable
+    state: directory
+    mode: '0755'
+  when: apparmor_mosquitto.stat.exists
+
+- name: Disable host mosquitto AppArmor profile
+  ansible.builtin.file:
+    src: /etc/apparmor.d/mosquitto
+    dest: /etc/apparmor.d/disable/mosquitto
+    state: link
+  when: apparmor_mosquitto.stat.exists
+  notify: Unload mosquitto AppArmor profile
