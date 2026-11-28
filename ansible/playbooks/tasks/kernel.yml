@@ -14,3 +14,12 @@
     dest: /etc/sysctl.d/99-hardening.conf
     mode: '0644'
   notify: Apply sysctl
+
+# Ubuntu 26.04 sets this to 1, which stacks container AppArmor profiles on host profiles matched by path
+- name: Let container runtimes replace the unconfined AppArmor profile
+  ansible.builtin.copy:
+    content: |
+      kernel.apparmor_restrict_unprivileged_unconfined = 0
+    dest: /etc/sysctl.d/20-apparmor.conf
+    mode: '0644'
+  notify: Apply sysctl
